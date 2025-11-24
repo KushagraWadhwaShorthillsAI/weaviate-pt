@@ -43,11 +43,11 @@ BASE_SCHEMA = {
     
     # Vector index configuration with RQ (Roaring Quantization)
     # RQ is supported in Weaviate v1.32+, default in v1.33+
-    "vectorIndexConfig": {
-        "rq": {
-            "enabled": True
-        }
-    },
+    # "vectorIndexConfig": {
+    #     "rq": {
+    #         "enabled": True
+    #     }
+    # },
     
     # Inverted index configuration with BlockMaxWAND disabled
     "invertedIndexConfig": {
