@@ -2,6 +2,7 @@
 Automated performance testing script.
 Runs all 5 search types across 5 different limits.
 Total: 25 tests (5 search types × 5 limits).
+Supports environment variables: PT_USER_COUNT, PT_RF_VALUE
 """
 
 
@@ -14,9 +15,17 @@ import os
 import time
 import sys
 
+# Read user count from environment variable (default to 100)
+DEFAULT_USER_COUNT = int(os.environ.get('PT_USER_COUNT', 100))
+RF_VALUE = os.environ.get('PT_RF_VALUE', 'current')
 
-def run_locust_test(locustfile, limit, search_type, users=100, spawn_rate=5, duration='5m'):
+
+def run_locust_test(locustfile, limit, search_type, users=None, spawn_rate=10, duration='5m'):
     """Run a single Locust test"""
+    
+    # Use provided users or default from environment
+    if users is None:
+        users = DEFAULT_USER_COUNT
     
     # Create reports folder for this limit (at project root level)
     reports_dir = f"../../single_collection_reports/reports_{limit}"
@@ -37,7 +46,7 @@ def run_locust_test(locustfile, limit, search_type, users=100, spawn_rate=5, dur
         '--csv', f'{reports_dir}/{search_type}'
     ]
     
-    print(f"\n🚀 Running: {search_type.upper()} test (limit={limit})")
+    print(f"\n🚀 Running: {search_type.upper()} test (limit={limit}, users={users}, RF={RF_VALUE})")
     print(f"   Command: {' '.join(cmd)}")
     print("-" * 70)
     
@@ -100,25 +109,22 @@ def main():
     # Configuration
     limits = [10, 50, 100, 150, 200]
     collection_name = config.WEAVIATE_CLASS_NAME
-    users = 100
-    spawn_rate = 5
+    users = DEFAULT_USER_COUNT  # Use environment variable or default 100
+    spawn_rate = 10
     duration = '5m'
     
     print(f"\n📊 Test Configuration:")
     print(f"   Collection: {collection_name}")
     print(f"   Limits to test: {limits}")
-    print(f"   Users: {users}")
+    print(f"   Users: {users} (RF: {RF_VALUE})")
     print(f"   Spawn rate: {spawn_rate} users/second")
     print(f"   Duration: {duration} per test")
     print(f"   Total tests: {len(limits) * 5} (5 search types × {len(limits)} limits)")
     print(f"   Estimated time: ~{len(limits) * 5 * 5 + len(limits) * 2} minutes")
     print("=" * 70)
     
-    # Confirm
-    confirm = input("\nProceed with automated testing? (yes/no): ").strip().lower()
-    if confirm != 'yes':
-        print("❌ Testing cancelled")
-        return 0
+    # Auto-confirm when running from run_all_users.sh
+    print("\n🚀 Starting automated testing...")
     
     # Step 1: Generate queries (one-time)
     print("\n" + "=" * 70)

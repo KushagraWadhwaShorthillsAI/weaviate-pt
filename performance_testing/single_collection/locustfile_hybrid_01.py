@@ -51,7 +51,7 @@ class SingleHybrid01User(HttpUser):
         query_data = random.choice(QUERIES)
         
         with self.client.post(
-            "/v1/graphql",
+            "/v1/graphql?consistency_level=ONE",
             headers=self.headers,
             json={"query": query_data["graphql"]},
             catch_response=True,

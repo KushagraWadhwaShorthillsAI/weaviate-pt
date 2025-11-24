@@ -68,7 +68,7 @@ class WeaviateVectorUser(HttpUser):
         
         # Execute single GraphQL query that searches all collections
         with self.client.post(
-            "/v1/graphql",
+            "/v1/graphql?consistency_level=ONE",
             headers=self.headers,
             json={"query": query_data["graphql"]},
             catch_response=True,

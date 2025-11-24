@@ -1,10 +1,19 @@
 #!/bin/bash
 # FULLY AUTOMATED Multi-Collection Performance Testing
 # Handles everything: query generation, testing, and reporting
+# Supports environment variables: PT_USER_COUNT, PT_RF_VALUE
+
+# Set defaults if not provided by wrapper
+USER_COUNT=${PT_USER_COUNT:-100}
+RF_VALUE=${PT_RF_VALUE:-"current"}
 
 echo "╔══════════════════════════════════════════════════════════════════════╗"
 echo "║   MULTI-COLLECTION PERFORMANCE TESTS - FULLY AUTOMATED               ║"
 echo "╚══════════════════════════════════════════════════════════════════════╝"
+echo ""
+echo "Configuration:"
+echo "  👥 Users: $USER_COUNT"
+echo "  🔄 RF: $RF_VALUE"
 echo ""
 echo "This script will:"
 echo "  1. Check and generate query files if needed"
@@ -104,10 +113,10 @@ for LIMIT in "${LIMITS[@]}"; do
     mkdir -p "$REPORT_DIR"
     
     # Test 1/5: BM25
-    echo "🔍 Test 1/5: BM25 (limit=$LIMIT)"
+    echo "🔍 Test 1/5: BM25 (limit=$LIMIT, users=$USER_COUNT)"
     echo "────────────────────────────────────────────────────────────────────"
     update_locustfile_query "locustfile_bm25.py" "queries_bm25_${LIMIT}.json"
-    locust -f locustfile_bm25.py --users 100 --spawn-rate 5 --run-time 5m --headless \
+    locust -f locustfile_bm25.py --users $USER_COUNT --spawn-rate 10 --run-time 5m --headless \
         --html "$REPORT_DIR/bm25_report.html" \
         --csv "$REPORT_DIR/bm25"
     echo "✅ BM25 complete"
@@ -115,10 +124,10 @@ for LIMIT in "${LIMITS[@]}"; do
     
     # Test 2/5: Hybrid 0.1
     echo ""
-    echo "🔍 Test 2/5: Hybrid α=0.1 (limit=$LIMIT)"
+    echo "🔍 Test 2/5: Hybrid α=0.1 (limit=$LIMIT, users=$USER_COUNT)"
     echo "────────────────────────────────────────────────────────────────────"
     update_locustfile_query "locustfile_hybrid_01.py" "queries_hybrid_01_${LIMIT}.json"
-    locust -f locustfile_hybrid_01.py --users 100 --spawn-rate 5 --run-time 5m --headless \
+    locust -f locustfile_hybrid_01.py --users $USER_COUNT --spawn-rate 10 --run-time 5m --headless \
         --html "$REPORT_DIR/hybrid_01_report.html" \
         --csv "$REPORT_DIR/hybrid_01"
     echo "✅ Hybrid 0.1 complete"
@@ -126,10 +135,10 @@ for LIMIT in "${LIMITS[@]}"; do
     
     # Test 3/5: Hybrid 0.9
     echo ""
-    echo "🔍 Test 3/5: Hybrid α=0.9 (limit=$LIMIT)"
+    echo "🔍 Test 3/5: Hybrid α=0.9 (limit=$LIMIT, users=$USER_COUNT)"
     echo "────────────────────────────────────────────────────────────────────"
     update_locustfile_query "locustfile_hybrid_09.py" "queries_hybrid_09_${LIMIT}.json"
-    locust -f locustfile_hybrid_09.py --users 100 --spawn-rate 5 --run-time 5m --headless \
+    locust -f locustfile_hybrid_09.py --users $USER_COUNT --spawn-rate 10 --run-time 5m --headless \
         --html "$REPORT_DIR/hybrid_09_report.html" \
         --csv "$REPORT_DIR/hybrid_09"
     echo "✅ Hybrid 0.9 complete"
@@ -137,10 +146,10 @@ for LIMIT in "${LIMITS[@]}"; do
     
     # Test 4/5: Vector
     echo ""
-    echo "🔍 Test 4/5: Vector (limit=$LIMIT)"
+    echo "🔍 Test 4/5: Vector (limit=$LIMIT, users=$USER_COUNT)"
     echo "────────────────────────────────────────────────────────────────────"
     update_vector_limit $LIMIT
-    locust -f locustfile_vector.py --users 100 --spawn-rate 5 --run-time 5m --headless \
+    locust -f locustfile_vector.py --users $USER_COUNT --spawn-rate 10 --run-time 5m --headless \
         --html "$REPORT_DIR/vector_report.html" \
         --csv "$REPORT_DIR/vector"
     echo "✅ Vector complete"
@@ -148,10 +157,10 @@ for LIMIT in "${LIMITS[@]}"; do
     
     # Test 5/5: Mixed
     echo ""
-    echo "🔍 Test 5/5: Mixed (limit=$LIMIT)"
+    echo "🔍 Test 5/5: Mixed (limit=$LIMIT, users=$USER_COUNT)"
     echo "────────────────────────────────────────────────────────────────────"
     update_locustfile_query "locustfile_mixed.py" "queries_mixed_${LIMIT}.json"
-    locust -f locustfile_mixed.py --users 100 --spawn-rate 5 --run-time 5m --headless \
+    locust -f locustfile_mixed.py --users $USER_COUNT --spawn-rate 10 --run-time 5m --headless \
         --html "$REPORT_DIR/mixed_report.html" \
         --csv "$REPORT_DIR/mixed"
     echo "✅ Mixed complete"
