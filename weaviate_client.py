@@ -193,7 +193,7 @@ def batch_insert_objects(objects: List[Dict[str, Any]], collection_name: str = N
         
         # Send batch insert request using session (reuses connections)
         response = session.post(
-            f"{config.WEAVIATE_URL}/v1/batch/objects",
+            f"{config.WEAVIATE_URL}/v1/batch/objects?consistency_level=ONE",
             headers=headers,
             json={"objects": batch_payload},
             timeout=120
@@ -261,7 +261,7 @@ def insert_single_object(properties: Dict[str, Any], vector: List[float],
         }
         
         response = session.post(
-            f"{config.WEAVIATE_URL}/v1/objects",
+            f"{config.WEAVIATE_URL}/v1/objects?consistency_level=ONE",
             headers=headers,
             json=payload,
             timeout=30
