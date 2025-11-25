@@ -82,19 +82,6 @@ echo "╔═══════════════════════�
 echo "║                 🎉 ALL USER COUNT TESTS COMPLETE!                    ║"
 echo "╚══════════════════════════════════════════════════════════════════════╝"
 echo ""
-echo "📊 Generating combined report across all user counts..."
-cd ../report_generators
-python3 generate_combined_user_count_report.py
-cd ../single_collection
-
-COMBINED_REPORT="../single_combined_report_RF${RF_VALUE}.html"
-if [ -f "$COMBINED_REPORT" ]; then
-    echo "✅ Combined report generated: $COMBINED_REPORT"
-else
-    echo "⚠️  Combined report not generated"
-fi
-
-echo ""
 echo "📊 Results saved:"
 echo "   ../single_results_RF${RF_VALUE}_Users100/"
 echo "   ../single_results_RF${RF_VALUE}_Users200/"
@@ -104,11 +91,5 @@ echo "📄 Individual HTML Reports:"
 echo "   ../single_results_RF${RF_VALUE}_Users100/single_collection_report_RF${RF_VALUE}_Users100.html"
 echo "   ../single_results_RF${RF_VALUE}_Users200/single_collection_report_RF${RF_VALUE}_Users200.html"
 echo "   ../single_results_RF${RF_VALUE}_Users300/single_collection_report_RF${RF_VALUE}_Users300.html"
-echo ""
-echo "📊 COMBINED Report (all user counts):"
-echo "   $COMBINED_REPORT"
-echo ""
-echo "🔍 To view combined report:"
-echo "   open $COMBINED_REPORT"
 echo ""
 

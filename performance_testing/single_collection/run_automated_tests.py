@@ -107,7 +107,9 @@ def main():
     print("╚" + "=" * 68 + "╝")
     
     # Configuration
-    limits = [10, 50, 100, 150, 200]
+    # Available limits: [10, 50, 100, 150, 200]
+    # Currently testing only: [200]
+    limits = [200]
     collection_name = config.WEAVIATE_CLASS_NAME
     users = DEFAULT_USER_COUNT  # Use environment variable or default 100
     spawn_rate = 10
@@ -228,10 +230,7 @@ def main():
     for limit in limits:
         print(f"   ../../single_collection_reports/reports_{limit}/")
     
-    print("\n📊 Generate combined report:")
-    print("   cd ../report_generators")
-    print("   python3 generate_single_report.py")
-    print("=" * 70)
+
     
     return 0
 
